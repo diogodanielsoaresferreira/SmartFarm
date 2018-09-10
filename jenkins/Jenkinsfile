@@ -1,0 +1,80 @@
+pipeline {
+    agent any
+    stages {
+        /*
+        stage('Cloning repository') {
+            steps {
+                git(
+                    branch: 'master',
+                    credentialsId: 'g202-jenkins',
+                    url: 'git@gitlab.com:deti-smartfarm/smartfarm.git'
+                )
+            }
+        }
+        */
+        
+        /*
+        stage('Build (without tests)') {
+            steps {
+                sh './jenkins/scripts/build_without_tests.sh'
+            }
+        }
+        */
+        
+        stage('Build (with tests)') {
+            steps {
+                // Build will stop if one of the tests went wrong
+                sh './jenkins/scripts/build_with_tests.sh'
+            }
+        }
+        
+        stage('Deploy') {
+            steps {
+                sh './jenkins/scripts/deploy.sh'
+            }
+        }
+    }
+    
+    // Post actions - send mail notification with build results
+    post {
+        success {
+            emailext (
+                body: """
+                    <b><u>${env.JOB_NAME}</u></b><br><br>Build Number: 
+                    <a href=\"${env.BUILD_URL}\">${env.BUILD_NUMBER}</a>
+                    <br>STATUS: <b style="color:green">SUCCESS</b>
+                """, 
+                from:'pdiogoferreira@ua.pt',
+                mimeType: 'text/html', 
+                subject: "Build Notification: ${JOB_NAME}-Build# ${BUILD_NUMBER} SUCCESS", 
+                to: """
+                    pdiogoferreira@ua.pt; 
+                    diogodanielsoaresferreira@ua.pt; 
+                    luisleira@ua.pt;
+                    pbmartins@ua.pt;
+                    danielasimoes@ua.pt
+                """
+            );
+        }
+        failure {
+            emailext (
+                attachLog: true, 
+                body: """
+                    <b><u>${env.JOB_NAME}</u></b><br><br>Build Number: 
+                    <a href=\"${env.BUILD_URL}\">${env.BUILD_NUMBER}</a>
+                    <br>STATUS: <b style="color:red">FAILURE</b>
+                """, 
+                from:'pdiogoferreira@ua.pt',
+                mimeType: 'text/html', 
+                subject: "Build Notification: ${JOB_NAME}-Build# ${BUILD_NUMBER} FAILURE", 
+                to: """
+                    pdiogoferreira@ua.pt; 
+                    diogodanielsoaresferreira@ua.pt; 
+                    luisleira@ua.pt;
+                    pbmartins@ua.pt;
+                    danielasimoes@ua.pt
+                """
+            );
+        }
+    }
+}

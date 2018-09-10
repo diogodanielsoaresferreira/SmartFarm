@@ -1,0 +1,11 @@
+version: '3'
+services:
+  jenkins:
+    build: build/
+    ports:
+      - 8082:8080
+      - 50000:50000
+    container_name: jenkins
+    volumes:
+      - $PWD/jenkins-home:/var/jenkins_home
+      - /var/run/docker.sock:/var/run/docker.sock

@@ -1,0 +1,6 @@
+{
+  "name": "Sensors",
+  "version": "0.0.0",
+  "private": true,
+  "main": "./Sensors.js"
+}

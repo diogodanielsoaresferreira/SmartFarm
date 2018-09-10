@@ -1,0 +1,6 @@
+{
+  "name": "NewFarm",
+  "version": "0.0.0",
+  "private": true,
+  "main": "./NewFarm.js"
+}

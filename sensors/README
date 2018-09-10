@@ -1,0 +1,5 @@
+Needs the library confluent-kafka to send values to kafka.
+
+Pre-requisites here:
+https://github.com/confluentinc/confluent-kafka-python#prerequisites
+

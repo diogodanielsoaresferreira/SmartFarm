@@ -1,0 +1,18 @@
+version: '3'
+services:
+    tomcat:
+        image: tomcat
+        restart: always
+        ports:
+          - "8089:8080"
+        environment:
+            - kafka_bootstrap_servers=deti-engsoft-01.ua.pt:9092
+            - datasource_postgres=jdbc:postgresql://deti-engsoft-01.ua.pt:5432/es202
+            - datasource_postgres_alerts=jdbc:postgresql://deti-engsoft-01.ua.pt:5432/es202
+            - datasource_postgres_triggered_alerts=jdbc:postgresql://deti-engsoft-01.ua.pt:5432/es202
+            - datasource_username=es202
+            - datasource_password=61ecbc41cdae
+            - mongo_host=deti-engsoft-02.ua.pt
+        volumes:
+          - "./alerts-management/target/AlertsManagement-0.0.1-SNAPSHOT.war:/usr/local/tomcat/webapps/alerts.war"
+          - "./alerts-management/target/AlertsManagement-0.0.1-SNAPSHOT:/usr/local/tomcat/webapps/alerts"
